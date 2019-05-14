@@ -1,0 +1,35 @@
+{
+  "name": "first-node-project",
+  "version": "1.0.0",
+  "description": "a simple login web app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyborg-nomade/first-node-project.git"
+  },
+  "author": "Uriel Fiori",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cyborg-nomade/first-node-project/issues"
+  },
+  "homepage": "https://github.com/cyborg-nomade/first-node-project#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.3.1",
+    "connect-flash": "^0.1.1",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-messages": "^1.0.1",
+    "express-session": "^1.16.1",
+    "express-validator": "^5.3.1",
+    "jquery": "^3.4.1",
+    "mongojs": "^2.6.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "popper.js": "^1.15.0"
+  }
+}
