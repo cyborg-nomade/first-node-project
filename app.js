@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var flash = require('connect-flash');
 
 var routes = require('./routes/index');
-var user = require('./routes/user');
+var users = require('./routes/users');
 
 var app = express();
 
@@ -31,3 +31,39 @@ app.use(session({
   saveUninitialized: true,
   resave: true
 }));
+
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+//express validator middleware
+app.use(expressValidator({
+  errorFormatter: function (param, msg, value) {
+    var namespace = param.split('.'),
+      root = namespace.shift(),
+      formParam = root;
+
+    while (namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param: formParam,
+      msg: msg,
+      value: value
+    };
+  }
+}));
+
+//connect-flash middleware
+app.use(flash());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+//define routes
+app.use('/', routes);
+app.use('/users', users);
+
+app.listen(3000);
+console.log('Server started on port 3000');
