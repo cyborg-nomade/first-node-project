@@ -1,5 +1,9 @@
 var express = require('express')
 var router = express.Router();
+var {
+  check,
+  validationResult
+} = require('express-validator/check');
 var mongojs = require('mongojs');
 var db = mongojs('passportapp', ['users']);
 var bcrypt = require('bcryptjs');
@@ -17,38 +21,31 @@ router.get('/register', (req, res) => {
 });
 
 //register page -POST
-router.post('/register', (req, res) => {
-  //get form values
-  var name = req.body.inputName;
-  var email = req.body.inputEmail;
-  var username = req.body.inputUsername;
-  var password = req.body.inputPassword;
-  var passwordConf = req.body.inputPasswordConf;
-
-  //validation
-  req.checkBody('name', 'Name field is required').notEmpty();
-  req.checkBody('email', 'Email field is required').notEmpty();
-  req.checkBody('email', 'Please use a valid email address').isEmail();
-  req.checkBody('username', 'Username field is required').notEmpty();
-  req.checkBody('password', 'Password field is required').notEmpty();
-  req.checkBody('passwordConf', 'Password Confirmation field is required').notEmpty();
-  req.checkBody('passwordConf', 'Passwords do not match').equals(req.body.password);
-
-  //check for errors
-  var errors = req.validationErrors();
-
-  if (errors) {
-    console.log('Form has errors');
-    res.render('register', {
-      errors: errors,
-      name: name,
-      email: email,
-      username: username,
-      password: password,
-      passwordConf: passwordConf
-    });
-  } else {
+router.post('/register', [
+  check('inputName').not().isEmpty().withMessage('Name field is required'),
+  check('inputEmail').not().isEmpty().withMessage('Email field is required'),
+  check('inputEmail').isEmail().withMessage('Please use a valid email address'),
+  check('inputUsername').not().isEmpty().withMessage('Username field is required'),
+  check('inputPassword').not().isEmpty().withMessage('Password field is required'),
+  check('inputPasswordConf').not().isEmpty().withMessage('Password Confirmation field is required'),
+  check('inputPasswordConf', 'Passwords do not match').custom((value, {
+    req
+  }) => (value === req.body.inputPassword))
+], (req, res) => {
+  try {
+    validationResult(req).throw();
     console.log('Success');
+  } catch (error) {
+    console.log('Form has errors');
+    console.log(error.array());
+    res.render('register', {
+      error: error.array(),
+      name: req.body.inputName,
+      email: req.body.inputEmail,
+      username: req.body.inputUsername,
+      password: req.body.inputPassword,
+      passwordConf: req.body.inputPasswordConf
+    });
   }
 });
 
