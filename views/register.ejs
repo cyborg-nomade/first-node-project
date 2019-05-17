@@ -1,6 +1,6 @@
-<%- include('includes/header.ejs') %> 
+<%- include('includes/header.ejs') %>
 
-<form class="form-signin">
+<form method="post" action="/users/register" class="form-signin">
   <h1 class="h3 mb-3 font-weight-normal">User Registration</h1>
   <label for="inputName" class="sr-only">Name</label>
   <input type="text" id="inputName" name="inputName" class="form-control" placeholder="Name" required
@@ -11,6 +11,8 @@
   <input type="text" id="inputUsername" name="inputUsername" class="form-control" placeholder="Username" required>
   <label for="inputPassword" class="sr-only">Password</label>
   <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
+  <label for="inputPasswordConf" class="sr-only">Password Confirmation</label>
+  <input type="password" id="inputPasswordConf" name="inputPasswordConf" class="form-control" placeholder="Password Confirmation" required>
   <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
   <p>Already have an account? <a href="/users/login">Log In</a>!</p>
   <p class="mt-5 mb-3 text-muted">&copy; 2017-2019</p>
