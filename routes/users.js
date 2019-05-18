@@ -43,20 +43,27 @@ router.post('/register', [
       password: req.body.inputPassword
     };
 
-    //add to database
-    db.users.insert(newUser, (err, doc) => {
-      try {
-        console.log('User added...');
+    //encrypt password
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        newUser.password = hash;
 
-        //succes message
-        req.flash('succes', 'You are registered and can now log in');
+        //add to database
+        db.users.insert(newUser, (err, doc) => {
+          try {
+            console.log('User added...');
 
-        //redirect
-        res.location('/');
-        res.redirect('/');
-      } catch (err) {
-        res.send(err);
-      }
+            //succes message
+            req.flash('succes', 'You are registered and can now log in');
+
+            //redirect
+            res.location('/');
+            res.redirect('/');
+          } catch (err) {
+            res.send(err);
+          }
+        });
+      });
     });
   } catch (error) {
     console.log('Form has errors');
