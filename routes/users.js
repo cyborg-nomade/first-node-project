@@ -34,7 +34,30 @@ router.post('/register', [
 ], (req, res) => {
   try {
     validationResult(req).throw();
-    console.log('Success');
+
+    //info from the form
+    var newUser = {
+      name: req.body.inputName,
+      email: req.body.inputEmail,
+      username: req.body.inputUsername,
+      password: req.body.inputPassword
+    };
+
+    //add to database
+    db.users.insert(newUser, (err, doc) => {
+      try {
+        console.log('User added...');
+
+        //succes message
+        req.flash('succes', 'You are registered and can now log in');
+
+        //redirect
+        res.location('/');
+        res.redirect('/');
+      } catch (err) {
+        res.send(err);
+      }
+    });
   } catch (error) {
     console.log('Form has errors');
     console.log(error.array());
