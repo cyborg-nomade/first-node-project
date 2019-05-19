@@ -39,7 +39,7 @@ app.use(passport.session());
 
 //express validator middleware
 app.use(expressValidator({
-  errorFormatter: function (param, msg, value) {
+  errorFormatter: function(param, msg, value) {
     var namespace = param.split('.'),
       root = namespace.shift(),
       formParam = root;
@@ -57,10 +57,16 @@ app.use(expressValidator({
 
 //connect-flash middleware
 app.use(flash());
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
+
+//global user variable
+app.get('*', (req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+})
 
 //define routes
 app.use('/', routes);

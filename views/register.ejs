@@ -6,6 +6,7 @@
       <div class="alert alert-danger"><%= err.msg %></div>
     <% }) %>
   <% } %>
+  <%- messages() -%>
   <form method="post" action="/users/register" class="form-signin">
     <h1 class="h3 mb-3 font-weight-normal">User Registration</h1>
     <label for="name" class="sr-only">Name</label>
