@@ -22,25 +22,25 @@ router.get('/register', (req, res) => {
 
 //register page -POST
 router.post('/register', [
-  check('inputName').not().isEmpty().withMessage('Name field is required'),
-  check('inputEmail').not().isEmpty().withMessage('Email field is required'),
-  check('inputEmail').isEmail().withMessage('Please use a valid email address'),
-  check('inputUsername').not().isEmpty().withMessage('Username field is required'),
-  check('inputPassword').not().isEmpty().withMessage('Password field is required'),
-  check('inputPasswordConf').not().isEmpty().withMessage('Password Confirmation field is required'),
-  check('inputPasswordConf', 'Passwords do not match').custom((value, {
+  check('name').not().isEmpty().withMessage('Name field is required'),
+  check('email').not().isEmpty().withMessage('Email field is required'),
+  check('email').isEmail().withMessage('Please use a valid email address'),
+  check('username').not().isEmpty().withMessage('Username field is required'),
+  check('password').not().isEmpty().withMessage('Password field is required'),
+  check('passwordConf').not().isEmpty().withMessage('Password Confirmation field is required'),
+  check('passwordConf', 'Passwords do not match').custom((value, {
     req
-  }) => (value === req.body.inputPassword))
+  }) => (value === req.body.password))
 ], (req, res) => {
   try {
     validationResult(req).throw();
 
     //info from the form
     var newUser = {
-      name: req.body.inputName,
-      email: req.body.inputEmail,
-      username: req.body.inputUsername,
-      password: req.body.inputPassword
+      name: req.body.name,
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password
     };
 
     //encrypt password
@@ -70,11 +70,11 @@ router.post('/register', [
     console.log(error.array());
     res.render('register', {
       error: error.array(),
-      name: req.body.inputName,
-      email: req.body.inputEmail,
-      username: req.body.inputUsername,
-      password: req.body.inputPassword,
-      passwordConf: req.body.inputPasswordConf
+      name: req.body.name,
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      passwordConf: req.body.passwordConf
     });
   }
 });
@@ -93,9 +93,9 @@ passport.deserializeUser((id, done) => {
 });
 
 //local strategy
-passport.use(new localStrategy((inputUsername, inputPassword, done) => {
+passport.use(new localStrategy((username, password, done) => {
   db.users.findOne({
-    username: inputUsername
+    username: username
   }, (err, user) => {
     if (err) {
       return done(err);
@@ -106,7 +106,7 @@ passport.use(new localStrategy((inputUsername, inputPassword, done) => {
       });
     }
 
-    bcrypt.compare(inputPassword, user.password, (err, isMatch) => {
+    bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) {
         return done(err);
       }
@@ -126,11 +126,10 @@ router.post('/login',
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/users/login',
-    failureFlash: 'Invalid Username Or Password'
+    failureFlash: 'Invalid username or password'
   }), (req, res) => {
-    console.log('Auth Successfull');
+    console.log('Auth successfull');
     res.redirect('/');
   });
-
 
 module.exports = router;
